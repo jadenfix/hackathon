@@ -1,0 +1,40 @@
+Configuration file config.toml not found. Using defaults.
+🚀 GridPilot-GT Starting...
+Simulation mode: True
+Timestamp: 2026-10-13T00:00:00Z
+
+📊 Fetching market data...
+Retrieved 169 price records
+Current power available: 528.3958762528393 kW
+
+🔮 Generating forecasts...
+Generated 24 hour forecast
+
+💰 Optimizing bids...
+Generated bid vector with 24 periods
+
+🏛️ Running VCG auction...
+Allocation: {'inference': np.float64(220.60661093810086), 'training': np.float64(165.45495820357564), 'cooling': np.float64(165.45495820357564)}
+Payments: {'inference': 0.0, 'training': 0.0, 'cooling': 0.0}
+
+❄️ Calculating cooling requirements...
+Cooling required: 72.65 kW (COP: 3.04)
+
+📤 Building dispatch payload...
+
+🎯 SIMULATION - Would submit payload:
+Total power: 624.16 kW
+Constraints satisfied: True
+System utilization: 62.4%
+
+✅ GridPilot-GT cycle completed successfully!
+
+📈 Summary Metrics:
+  • GPU Allocation: 551.517
+  • Total Power: 624.2 kW
+  • Battery SOC: 65.5%
+  • Cooling Load: 72.6 kW
+  • Efficiency: 86.8%
+Receipt: docs/demo/offline-cycle.json
+
+🎉 GridPilot-GT executed successfully!

@@ -1,0 +1,19 @@
+{
+  "allocation_kw": {
+    "cooling": 165.454958,
+    "inference": 220.606611,
+    "training": 165.454958
+  },
+  "as_of": "2026-10-13T00:00:00Z",
+  "constraints_satisfied": true,
+  "metrics": {
+    "battery_soc": 0.654874,
+    "cooling_efficiency": 0.867636,
+    "cooling_kw": 72.646199,
+    "total_power_kw": 624.162727
+  },
+  "mode": "synthetic-simulation",
+  "schema": "gridpilot.offline-receipt.v1",
+  "scope": "provider-free synthetic fixture; no market submission",
+  "seed": 8257
+}
