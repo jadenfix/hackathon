@@ -41,7 +41,7 @@
   "schema": "gridpilot.demo-capture.v1",
   "scope": "provider-free synthetic fixture; no market submission",
   "source_blobs": {
-    ".github/workflows/offline-demo.yml": "c851b49e795204bea611ee5807f24b517de68cf0",
+    ".github/workflows/offline-demo.yml": "6b57bc34d32928dea514e287550ed188960dbc80",
     "README.md": "9bc66b470f261747fabb549f814582123b9c7a28",
     "hackathon/api_client/client.py": "90897360cbb47a73fa8e285f00c3e06e2b3cf766",
     "hackathon/control/cooling_model.py": "bc9a9b8cb1a85e9ce75b6512daf72c1e623259ed",
@@ -57,6 +57,6 @@
     "scripts/record_offline_demo.py": "ab5b29b90275c97d5e652082f48616ef00004ac1",
     "scripts/verify_offline_demo.py": "4baacd8738578f872b7ad7dae3077c2e9fc65d66"
   },
-  "source_commit": "c3f7cc5a45b4e03df56f5de6596f6e5c82a851f1",
-  "source_tree": "7763935300b59e8ba1214ee87660a45fb4d8302c"
+  "source_commit": "489313341ca3a1de8df3cbd67d5a51e50e4b8876",
+  "source_tree": "e3b217b26d9dce1e087c255cef7524c85f59c800"
 }
