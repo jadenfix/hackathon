@@ -68,7 +68,7 @@ def load_config() -> Dict[str, Any]:
         logger.warning("config.toml not found, using defaults")
         return {
             "api_key": "YOUR_API_KEY_HERE", 
-            "site_power_kw": 1000000,
+            "site_power_kw": 1000,
             "site_name": "HackFestSite",
             "base_url": MARA_API_BASE,
             "BATTERY_CAP_MWH": 1.0,

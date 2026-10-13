@@ -545,3 +545,17 @@ For support and questions:
 ---
 
 **GridPilot-GT is ready for the MARA Hackathon 2025! 🚀**
+
+## Offline energy-cycle verification
+
+```sh
+python hackathon/main.py --mode gridpilot --simulate 1
+PYTHONPATH=hackathon python -m pytest -q hackathon/tests/test_offline_cycle.py
+```
+
+Simulation uses explicitly synthetic market prices and inventory, executes
+forecasting, bidding, allocation, cooling, and dispatch preparation, and never
+fetches or submits to the market API. The default synthetic site is 1 MW
+(1,000 kW). Dashboard dependencies are loaded when dashboard mode is selected.
+The offline check verifies the cycle and external-call exclusion; it does not
+validate real-market performance or the full historical test suite.
