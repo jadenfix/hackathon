@@ -506,12 +506,12 @@ def get_market_status() -> Dict[str, Any]:
         }
 
 
-def _generate_fallback_prices() -> pd.DataFrame:
+def _generate_fallback_prices(as_of: Optional[datetime] = None) -> pd.DataFrame:
     """Generate fallback synthetic price data when API is unavailable."""
     logger.warning("Using fallback synthetic price data")
     
     # Generate realistic fallback data (previous implementation)
-    end_dt = datetime.now()
+    end_dt = as_of or datetime.now()
     start_dt = end_dt - timedelta(days=7)
     dates = pd.date_range(start=start_dt, end=end_dt, freq='H')
     n_periods = len(dates)
@@ -545,7 +545,7 @@ def _generate_fallback_prices() -> pd.DataFrame:
     })
 
 
-def _generate_fallback_inventory() -> Dict[str, Any]:
+def _generate_fallback_inventory(as_of: Optional[datetime] = None) -> Dict[str, Any]:
     """Generate fallback synthetic inventory when API is unavailable."""
     logger.warning("Using fallback synthetic inventory data")
     
@@ -553,7 +553,8 @@ def _generate_fallback_inventory() -> Dict[str, Any]:
     base_power = config.get('site_power_kw', 1000)
     
     # Realistic utilization based on time of day
-    hour = datetime.now().hour
+    current_time = as_of or datetime.now()
+    hour = current_time.hour
     base_utilization = 0.65 if 6 <= hour <= 22 else 0.45  # Higher during day
     utilization = np.clip(np.random.normal(base_utilization, 0.15), 0.25, 0.85)
     
@@ -577,7 +578,7 @@ def _generate_fallback_inventory() -> Dict[str, Any]:
         "cooling_load": float(power_used * 0.15),
         "efficiency": float(np.clip(np.random.normal(0.92, 0.02), 0.85, 0.98)),
         "temperature": float(np.clip(np.random.normal(65, 5), 45, 85)),
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": current_time.isoformat(),
         "status": "operational_fallback",
         "alerts": ["API_UNAVAILABLE"],
         "market_participation": False
@@ -683,4 +684,4 @@ def test_mara_api_connection() -> Dict[str, Any]:
     else:
         logger.warning(f"⚠️ MARA API integration has issues: {recommendations}")
     
-    return test_results 
+    return test_results

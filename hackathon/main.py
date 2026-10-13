@@ -16,6 +16,8 @@ import os
 import logging
 from pathlib import Path
 
+DEFAULT_FIXTURE_AS_OF = "2026-10-13T00:00:00Z"
+
 # Add the current directory to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -132,18 +134,24 @@ def run_gridpilot_gt(
     if simulate and seed is not None:
         np.random.seed(seed)
 
+    fixture_time = None
+    fixture_label = None
+    if simulate:
+        fixture_label = as_of or DEFAULT_FIXTURE_AS_OF
+        fixture_time = datetime.fromisoformat(fixture_label.replace("Z", "+00:00"))
+
     start_time = time.time()
     print("🚀 GridPilot-GT Starting...")
     print(f"Simulation mode: {simulate}")
-    print(f"Timestamp: {as_of or datetime.now().isoformat()}")
+    print(f"Timestamp: {fixture_label or datetime.now().isoformat()}")
     
     try:
         # Step 1: Get market data
         print("\n📊 Fetching market data...")
         if simulate:
             from api_client.client import _generate_fallback_prices, _generate_fallback_inventory
-            prices = _generate_fallback_prices()
-            inventory = _generate_fallback_inventory()
+            prices = _generate_fallback_prices(as_of=fixture_time)
+            inventory = _generate_fallback_inventory(as_of=fixture_time)
         else:
             prices = get_prices()
             inventory = get_inventory()
@@ -230,7 +238,7 @@ def run_gridpilot_gt(
             'cooling_kw': cooling_kw,
             'efficiency': cooling_metrics['efficiency'],
             'fixture_seed': seed if simulate else None,
-            'as_of': as_of if simulate else None,
+            'as_of': fixture_label if simulate else None,
             'payload': payload,
             # Interface compatibility fields
             'power_requirements': payload['power_requirements'],
@@ -323,7 +331,7 @@ def main():
     )
     parser.add_argument(
         "--as-of",
-        default="2026-10-13T00:00:00Z",
+        default=DEFAULT_FIXTURE_AS_OF,
         help="Label used in deterministic synthetic-fixture receipts",
     )
     parser.add_argument(
