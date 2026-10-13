@@ -2,19 +2,19 @@
   "artifacts": {
     "docs/demo/offline-cycle.json": {
       "bytes": 489,
-      "sha256": "3dcf0f18dbbf04128e6b6433ee2215eff32c901f06072ac4b3350cd269d51154"
+      "sha256": "00cfeb8e3c356011dab8fe6f3dc14257f02f99f47f1d4298afaeb02e75c9a67e"
     },
     "docs/demo/offline-cycle.txt": {
-      "bytes": 1126,
-      "sha256": "8d6deaaca5079852c74a54530a85d1f9ede72db12e43ae318b2842aa481de400"
+      "bytes": 1123,
+      "sha256": "5f6266400a97b16adc2411d321d0eebee4ec861cb2ad9c8727393c6bf19724dc"
     },
     "docs/demo/offline-gridpilot.gif": {
-      "bytes": 147756,
-      "sha256": "a566969e0937dd2f2f64c2ea805cd3609a9dbd80eb000c9e759335537c69393a"
+      "bytes": 147823,
+      "sha256": "2cf51dc36cb09d7597fd980c2a8b52257908531f5570a01badb7b9a2b8ed9236"
     },
     "docs/demo/offline-gridpilot.mp4": {
-      "bytes": 97501,
-      "sha256": "01f238607a6b2c1c9a08cc22eb4c3e55f316b1ce6681cc3f1e4072037e6eca9e"
+      "bytes": 97084,
+      "sha256": "3247d7e79b726a43ac37ca3e2ea1961c3d3f9562b5ca7811947e9bf6684b35ed"
     },
     "docs/demo/offline-gridpilot.png": {
       "bytes": 28441,
@@ -41,22 +41,22 @@
   "schema": "gridpilot.demo-capture.v1",
   "scope": "provider-free synthetic fixture; no market submission",
   "source_blobs": {
-    ".github/workflows/offline-demo.yml": "6b57bc34d32928dea514e287550ed188960dbc80",
+    ".github/workflows/offline-demo.yml": "7c8e52b443185f694301d0fb669e2a084f4b92e6",
     "README.md": "9bc66b470f261747fabb549f814582123b9c7a28",
-    "hackathon/api_client/client.py": "90897360cbb47a73fa8e285f00c3e06e2b3cf766",
+    "hackathon/api_client/client.py": "7a79d0f00c68d120c9a69a10b84069d16827c222",
     "hackathon/control/cooling_model.py": "bc9a9b8cb1a85e9ce75b6512daf72c1e623259ed",
     "hackathon/dispatch/dispatch_agent.py": "130f865069bf33939473e17b831b0be44b288516",
     "hackathon/forecasting/forecaster.py": "4eebc84adfec53801f104467eb6d0dbe933479ce",
     "hackathon/game_theory/bid_generators.py": "d3f9ca36122ad2799c552fcd1d387ce819ad4aba",
     "hackathon/game_theory/vcg_auction.py": "06e3687cbd779bf5f7b8a4a2c34750953a919d7b",
-    "hackathon/main.py": "e4bd9fbeef9debe72e68e96c8f806773f0702d10",
+    "hackathon/main.py": "ab1ee2dd5b1c5208d7fd9361a50eadfea32a3029",
     "hackathon/tests/test_offline_cli.py": "36357e60985e86c138585eabe5be120ccd1b05fd",
-    "hackathon/tests/test_offline_cycle.py": "ada241e2f0738e1962dc0654954f0a856e9607ef",
+    "hackathon/tests/test_offline_cycle.py": "a778da2a5a0f0ceee7b8deb475f5e0bc694e8d1d",
     "main.py": "512b2c0b240231329290d6be36d898615e987ddf",
     "requirements-offline.txt": "855474c719d7b11981b543cfe6a746a0ff235b96",
     "scripts/record_offline_demo.py": "ab5b29b90275c97d5e652082f48616ef00004ac1",
     "scripts/verify_offline_demo.py": "4baacd8738578f872b7ad7dae3077c2e9fc65d66"
   },
-  "source_commit": "489313341ca3a1de8df3cbd67d5a51e50e4b8876",
-  "source_tree": "e3b217b26d9dce1e087c255cef7524c85f59c800"
+  "source_commit": "826dc53efe3dc0ca6b9bf9dce108262a049e2132",
+  "source_tree": "0cab7d701606477e47aaeb0e56ab85358f1972dc"
 }

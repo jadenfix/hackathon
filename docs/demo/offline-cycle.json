@@ -1,16 +1,16 @@
 {
   "allocation_kw": {
-    "cooling": 165.454958,
-    "inference": 220.606611,
-    "training": 165.454958
+    "cooling": 199.803736,
+    "inference": 266.404981,
+    "training": 199.803736
   },
   "as_of": "2026-10-13T00:00:00Z",
   "constraints_satisfied": true,
   "metrics": {
-    "battery_soc": 0.654874,
-    "cooling_efficiency": 0.867636,
-    "cooling_kw": 72.646199,
-    "total_power_kw": 624.162727
+    "battery_soc": 0.509985,
+    "cooling_efficiency": 0.840157,
+    "cooling_kw": 90.597005,
+    "total_power_kw": 756.609459
   },
   "mode": "synthetic-simulation",
   "schema": "gridpilot.offline-receipt.v1",

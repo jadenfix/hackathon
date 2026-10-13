@@ -14,27 +14,27 @@ Generated 24 hour forecast
 Generated bid vector with 24 periods
 
 🏛️ Running VCG auction...
-Allocation: {'inference': np.float64(220.60661093810086), 'training': np.float64(165.45495820357564), 'cooling': np.float64(165.45495820357564)}
+Allocation: {'inference': np.float64(266.4049813972849), 'training': np.float64(199.8037360479637), 'cooling': np.float64(199.8037360479637)}
 Payments: {'inference': 0.0, 'training': 0.0, 'cooling': 0.0}
 
 ❄️ Calculating cooling requirements...
-Cooling required: 72.65 kW (COP: 3.04)
+Cooling required: 90.60 kW (COP: 2.94)
 
 📤 Building dispatch payload...
 
 🎯 SIMULATION - Would submit payload:
-Total power: 624.16 kW
+Total power: 756.61 kW
 Constraints satisfied: True
-System utilization: 62.4%
+System utilization: 75.7%
 
 ✅ GridPilot-GT cycle completed successfully!
 
 📈 Summary Metrics:
-  • GPU Allocation: 551.517
-  • Total Power: 624.2 kW
-  • Battery SOC: 65.5%
-  • Cooling Load: 72.6 kW
-  • Efficiency: 86.8%
+  • GPU Allocation: 666.012
+  • Total Power: 756.6 kW
+  • Battery SOC: 51.0%
+  • Cooling Load: 90.6 kW
+  • Efficiency: 84.0%
 Receipt: docs/demo/offline-cycle.json
 
 🎉 GridPilot-GT executed successfully!
