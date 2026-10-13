@@ -19,7 +19,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 try:
     import toml
-    from ui.dashboard import main as run_dashboard
     from llm_integration.mock_interface import MockLLMInterface
     from llm_integration.unified_interface import UnifiedLLMInterface
     
@@ -131,8 +130,13 @@ def run_gridpilot_gt(simulate: bool = False):
     try:
         # Step 1: Get market data
         print("\n📊 Fetching market data...")
-        prices = get_prices()
-        inventory = get_inventory()
+        if simulate:
+            from api_client.client import _generate_fallback_prices, _generate_fallback_inventory
+            prices = _generate_fallback_prices()
+            inventory = _generate_fallback_inventory()
+        else:
+            prices = get_prices()
+            inventory = get_inventory()
         print(f"Retrieved {len(prices)} price records")
         print(f"Current power available: {inventory['power_available']} kW")
         
@@ -207,6 +211,7 @@ def run_gridpilot_gt(simulate: bool = False):
         # Return success result for testing (with interface compatibility)
         return {
             'success': True,
+            'mode': 'synthetic-simulation' if simulate else 'live',
             'elapsed_time': time.time() - start_time,
             'soc': soc,
             'total_power': payload['power_requirements']['total_power_kw'],
@@ -312,6 +317,7 @@ def main():
             sys.exit(1)
     
     elif args.mode == "dashboard":
+        from ui.dashboard import main as run_dashboard
         # Run the Streamlit dashboard
         print("Starting Energy Management Dashboard...")
         print("The dashboard will open in your browser.")
