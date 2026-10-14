@@ -435,13 +435,27 @@ async def execute_dispatch():
         raise HTTPException(status_code=500, detail=f"Dispatch error: {str(e)}")
 
 @app.post("/api/v1/system/run-full-cycle")
-async def run_full_cycle(simulate: bool = True):
+async def run_full_cycle(
+    simulate: bool = True,
+    seed: int = 8257,
+    as_of: Optional[datetime] = None,
+):
     """Run complete GridPilot-GT optimization cycle."""
     try:
         start_time = time.time()
         
         # Run main system cycle
-        result = main.main(simulate=simulate)
+        result = main.run_gridpilot_gt(
+            simulate=simulate,
+            seed=seed if simulate else None,
+            as_of=(as_of.isoformat().replace("+00:00", "Z") if as_of else main.DEFAULT_FIXTURE_AS_OF)
+            if simulate else None,
+        )
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=500,
+                detail=f"Full cycle failed: {result.get('error', 'unknown error')}",
+            )
         
         processing_time = time.time() - start_time
         
@@ -456,6 +470,11 @@ async def run_full_cycle(simulate: bool = True):
         
         return {
             "cycle_result": result,
+            "scope": (
+                "provider-free synthetic fixture; no market submission"
+                if simulate else "live provider execution; not covered by offline verification"
+            ),
+            "offline_receipt": main.build_offline_receipt(result) if simulate else None,
             "performance_metrics": {
                 "total_time_ms": processing_time * 1000,
                 "success": result.get('success', False)
@@ -463,6 +482,8 @@ async def run_full_cycle(simulate: bool = True):
             "timestamp": datetime.now().isoformat()
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error in full cycle: {e}")
         raise HTTPException(status_code=500, detail=f"Full cycle error: {str(e)}")

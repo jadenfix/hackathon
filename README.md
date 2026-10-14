@@ -36,3 +36,19 @@ The verifier checks the recorded source commit and Git blobs, replays the exact 
 - Other experimental dashboards, model files, research scripts, and provider paths in `hackathon/` are outside this verified slice.
 
 See [`hackathon/README.md`](hackathon/README.md) for broader historical prototype notes; claims there are not part of this verified workflow.
+
+## Offline API cycle
+
+The existing `/api/v1/system/run-full-cycle` route calls the same orchestration
+as the CLI. Install `requirements-api-offline.txt` to run its route tests:
+
+```bash
+python -m pip install -r requirements-api-offline.txt
+python -m pytest -q hackathon/tests/test_api_offline_cycle.py
+```
+
+A simulated successful response contains an explicit fixture scope and a stable
+`offline_receipt`; orchestration failures return HTTP 500 and invalid datetime
+inputs return HTTP 422. API startup connectivity checks, background provider
+refresh, other API routes, and live market execution remain unverified. These
+route tests deliberately do not start those provider processes.
