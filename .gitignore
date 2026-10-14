@@ -50,6 +50,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+artifacts/
 
 # Translations
 *.mo
@@ -191,4 +192,4 @@ Temporary Items
 # Project specific
 *.log
 models/
-energy_management.log 
+energy_management.log

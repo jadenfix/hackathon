@@ -7,12 +7,16 @@ Combines MARA API GridPilot-GT functionality with LLM integration.
 
 import argparse
 from datetime import datetime
+import json
 import pandas as pd
+import numpy as np
 import time
 import sys
 import os
 import logging
 from pathlib import Path
+
+DEFAULT_FIXTURE_AS_OF = "2026-10-13T00:00:00Z"
 
 # Add the current directory to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -116,24 +120,38 @@ def run_tests():
     print("\n✅ All tests completed successfully!")
 
 
-def run_gridpilot_gt(simulate: bool = False):
+def run_gridpilot_gt(
+    simulate: bool = False,
+    *,
+    seed: int | None = None,
+    as_of: str | None = None,
+):
     """Main orchestration loop for GridPilot-GT.
     
     Args:
         simulate: If True, run in simulation mode with mock data
     """
+    if simulate and seed is not None:
+        np.random.seed(seed)
+
+    fixture_time = None
+    fixture_label = None
+    if simulate:
+        fixture_label = as_of or DEFAULT_FIXTURE_AS_OF
+        fixture_time = datetime.fromisoformat(fixture_label.replace("Z", "+00:00"))
+
     start_time = time.time()
     print("🚀 GridPilot-GT Starting...")
     print(f"Simulation mode: {simulate}")
-    print(f"Timestamp: {datetime.now()}")
+    print(f"Timestamp: {fixture_label or datetime.now().isoformat()}")
     
     try:
         # Step 1: Get market data
         print("\n📊 Fetching market data...")
         if simulate:
             from api_client.client import _generate_fallback_prices, _generate_fallback_inventory
-            prices = _generate_fallback_prices()
-            inventory = _generate_fallback_inventory()
+            prices = _generate_fallback_prices(as_of=fixture_time)
+            inventory = _generate_fallback_inventory(as_of=fixture_time)
         else:
             prices = get_prices()
             inventory = get_inventory()
@@ -216,6 +234,11 @@ def run_gridpilot_gt(simulate: bool = False):
             'soc': soc,
             'total_power': payload['power_requirements']['total_power_kw'],
             'revenue': payments,
+            'allocation': allocation,
+            'cooling_kw': cooling_kw,
+            'efficiency': cooling_metrics['efficiency'],
+            'fixture_seed': seed if simulate else None,
+            'as_of': fixture_label if simulate else None,
             'payload': payload,
             # Interface compatibility fields
             'power_requirements': payload['power_requirements'],
@@ -235,6 +258,44 @@ def run_gridpilot_gt(simulate: bool = False):
             'error': str(e),
             'elapsed_time': time.time() - start_time
         }
+
+
+def build_offline_receipt(result: dict) -> dict:
+    """Build a stable, JSON-safe receipt for the provider-free fixture run."""
+    if result.get("mode") != "synthetic-simulation":
+        raise ValueError("offline receipts require synthetic simulation mode")
+
+    allocation = {
+        key: round(float(value), 6)
+        for key, value in sorted(result["allocation"].items())
+    }
+    return {
+        "schema": "gridpilot.offline-receipt.v1",
+        "scope": "provider-free synthetic fixture; no market submission",
+        "mode": result["mode"],
+        "seed": result["fixture_seed"],
+        "as_of": result["as_of"],
+        "constraints_satisfied": bool(result["constraints_satisfied"]),
+        "metrics": {
+            "battery_soc": round(float(result["soc"]), 6),
+            "total_power_kw": round(float(result["total_power"]), 6),
+            "cooling_kw": round(float(result["cooling_kw"]), 6),
+            "cooling_efficiency": round(float(result["efficiency"]), 6),
+        },
+        "allocation_kw": allocation,
+    }
+
+
+def write_json_receipt(path: str, receipt: dict) -> None:
+    """Write a receipt atomically so interrupted runs cannot leave partial JSON."""
+    destination = Path(path)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temporary = destination.with_suffix(destination.suffix + ".tmp")
+    temporary.write_text(
+        json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    temporary.replace(destination)
 
 
 def main():
@@ -261,6 +322,21 @@ def main():
         type=int, 
         default=1,
         help="GridPilot-GT simulation mode (1) or live mode (0)"
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=8257,
+        help="Random seed for the provider-free synthetic fixture",
+    )
+    parser.add_argument(
+        "--as-of",
+        default=DEFAULT_FIXTURE_AS_OF,
+        help="Label used in deterministic synthetic-fixture receipts",
+    )
+    parser.add_argument(
+        "--receipt",
+        help="Write a deterministic JSON receipt (simulation mode only)",
     )
     
     args = parser.parse_args()
@@ -307,9 +383,20 @@ def main():
             sys.exit(1)
             
         simulate_mode = bool(args.simulate)
-        result = run_gridpilot_gt(simulate=simulate_mode)
+        if args.receipt and not simulate_mode:
+            parser.error("--receipt is available only with --simulate 1")
+
+        result = run_gridpilot_gt(
+            simulate=simulate_mode,
+            seed=args.seed if simulate_mode else None,
+            as_of=args.as_of if simulate_mode else None,
+        )
         
         if result['success']:
+            if args.receipt:
+                receipt = build_offline_receipt(result)
+                write_json_receipt(args.receipt, receipt)
+                print(f"Receipt: {args.receipt}")
             print("\n🎉 GridPilot-GT executed successfully!")
             sys.exit(0)
         else:
