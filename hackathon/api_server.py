@@ -472,7 +472,7 @@ async def run_full_cycle(
             "cycle_result": result,
             "scope": (
                 "provider-free synthetic fixture; no market submission"
-                if simulate else "live provider execution; not covered by offline verification"
+                if simulate else "live mode requested; provider paths not covered by offline verification"
             ),
             "offline_receipt": main.build_offline_receipt(result) if simulate else None,
             "performance_metrics": {
